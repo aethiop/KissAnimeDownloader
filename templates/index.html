@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="{{url_for('static',filename = 'main.css')}}" rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+    
+  
+  <h1>KissAnime</h1>
+  <h3>
+    download link search
+  </h3>
+
+ <section class="list-wrap">
+  <label for="search-text"></label>
+  <form method="GET" action="/">
+    <input type="text" name = "q" id="q" placeholder="Search Here" class="search-box" value="{{q}}">
+  </form>
+  
+  <span class="list-count"></span>   
+  <ul id="list">
+    {%for i in range(0,len)%}
+      <li class="in"><a href ="{{download_urls[i]}}">{{download_names[i]}}</a></li>
+    {%endfor%}
+  </ul>
+    
+  </section>
+</body>
+</html>
