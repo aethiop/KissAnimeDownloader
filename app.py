@@ -25,15 +25,12 @@ def get_kissanime_url(anime):
 
 	
 	seriesurl = BASE_URL + "/Anime/" + anime
-	print(seriesurl)
 	name_series = anime.replace("-"," ")
 	#Use cfscrape to scrape web because of the 
 	try:
 		scrape = cfscrape.create_scraper()
 		content_html = scrape.get(seriesurl)
-		print("{0} Successfully loaded".format(name_series))
 	except ConnectionError:
-		print("Error in connection, Retrying...")
 		content_html = scrape.get(seriesurl)
 	
 	#Souping the the page
@@ -44,8 +41,6 @@ def get_kissanime_url(anime):
 	#Reverse them in the right order
 	episodes.reverse()
 	num_episodes = len(episodes)
-	print(str(num_episodes) + " episodes in total")
-	
 	#Itterate through all the links to scrape another page
 	i = 0
 	for episode in episodes:
@@ -56,23 +51,18 @@ def get_kissanime_url(anime):
 		#Scrape the episode page
 		try:
 			episode_page = scrape.get(episodes_link).content
-			print("Successfully loaded episode {0}".format(i))
 		except:
-			print("Error in connection, Retrying...")
 			episode_page = scrape.get(episodes_link).content
 		
 		episode_souped = bsoup(episode_page,'lxml')
 		next_url = re.findall(r'http[s]://www.rapidvid.to/[a-z]/\w{10}',episode_souped.text)
-		print(next_url)
 		#Replace the /e/ with /d/ to get the download links
 		next_url[0] = next_url[0].replace("/e/","/d/")
 		
 		#Scarp the download page
 		try:
 			download_page = scrape.get(next_url[0]).content
-			print("Successfully loaded the download page")
 		except ConnectionError:
-			print("Error in connection, Retrying...")
 			download_page = scrape.get(next_url[0]).content
 			
 		download_souped = bsoup(download_page,'lxml')
@@ -108,9 +98,6 @@ def search():
 				result_name.append(r.text)
 	
 	return render_template('index.html', len = len(result_name),download_urls = search_urls,download_names = result_name)
-    # An authorised request
-    #r = s.get(get_url, verify=False)
-    #print r.text
 
 
 if __name__ == "__main__":
